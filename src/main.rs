@@ -346,45 +346,39 @@ impl Game {
                 Animation::with_frame(SheetRegion::ZERO),
                 Animation::with_frames(
                     &[
-                        SheetRegion::rect(0, 300, 36, 36),
-                        SheetRegion::rect(60, 300, 36, 36),
-                        SheetRegion::rect(120, 300, 36, 36),
-                        SheetRegion::rect(180, 300, 36, 36),
-                        SheetRegion::rect(300, 300, 36, 36),
+                        // PlayerRightIdle
+                        SheetRegion::rect(0, 364, 36, 36),
                     ],
                     0.15,
                 )
                 .looped(),
                 Animation::with_frames(
                     &[
-                        SheetRegion::rect(300, 300, 36, 36),
-                        SheetRegion::rect(360, 300, 36, 36),
-                        SheetRegion::rect(420, 300, 36, 36),
+                        // PlayerRightWalk
+                        SheetRegion::rect(0, 364, 36, 36),
+                        SheetRegion::rect(60, 364, 36, 36),
+                        SheetRegion::rect(120, 364, 36, 36),
+                        SheetRegion::rect(180, 364, 36, 36),
+                        SheetRegion::rect(240, 364, 36, 36),
                     ],
                     0.15,
                 )
                 .looped(),
-                Animation::with_frame(SheetRegion::rect(480, 300, 36, 36)),
-                Animation::with_frame(SheetRegion::rect(539, 300, 36, 36)),
+                // PlayerRightJumpRise
+                Animation::with_frame(SheetRegion::rect(60, 364, 36, 36)),
+                // PlayerRightJumpFall
+                Animation::with_frame(SheetRegion::rect(180, 364, 36, 36)),
                 Animation::with_frames(
                     &[
-                        SheetRegion::rect(779, 300, 36, 36),
-                        SheetRegion::rect(839, 300, 36, 36),
-                        SheetRegion::rect(899, 300, 36, 36),
-                        SheetRegion::rect(959, 300, 36, 36),
-                        SheetRegion::rect(1019, 300, 36, 36),
-                        SheetRegion::rect(1079, 300, 36, 36),
-                        SheetRegion::rect(1139, 300, 36, 36),
+                        // PlayerRightAttack
+                        SheetRegion::rect(120, 364, 36, 36),
                     ],
                     0.07,
                 ),
                 Animation::with_frames(
                     &[
-                        SheetRegion::rect(0, 300, 36, 36),
-                        SheetRegion::rect(60, 300, 36, 36),
-                        SheetRegion::rect(120, 300, 36, 36),
-                        SheetRegion::rect(180, 300, 36, 36),
-                        SheetRegion::rect(300, 300, 36, 36),
+                        // PlayerLeftIdle
+                        SheetRegion::rect(0, 364, 36, 36),
                     ],
                     0.15,
                 )
@@ -392,25 +386,25 @@ impl Game {
                 .flip_horizontal(),
                 Animation::with_frames(
                     &[
-                        SheetRegion::rect(300, 300, 36, 36),
-                        SheetRegion::rect(360, 300, 36, 36),
-                        SheetRegion::rect(420, 300, 36, 36),
+                        // PlayerLeftWalk
+                        SheetRegion::rect(0, 364, 36, 36),
+                        SheetRegion::rect(60, 364, 36, 36),
+                        SheetRegion::rect(120, 364, 36, 36),
+                        SheetRegion::rect(180, 364, 36, 36),
+                        SheetRegion::rect(240, 364, 36, 36),
                     ],
                     0.15,
                 )
                 .looped()
                 .flip_horizontal(),
-                Animation::with_frame(SheetRegion::rect(480, 300, 36, 36)).flip_horizontal(),
-                Animation::with_frame(SheetRegion::rect(539, 300, 36, 36)).flip_horizontal(),
+                // PlayerLeftJumpRise
+                Animation::with_frame(SheetRegion::rect(60, 364, 36, 36)).flip_horizontal(),
+                // PlayerLeftJumpFall
+                Animation::with_frame(SheetRegion::rect(180, 364, 36, 36)).flip_horizontal(),
                 Animation::with_frames(
                     &[
-                        SheetRegion::rect(779, 300, 36, 36),
-                        SheetRegion::rect(839, 300, 36, 36),
-                        SheetRegion::rect(899, 300, 36, 36),
-                        SheetRegion::rect(959, 300, 36, 36),
-                        SheetRegion::rect(1019, 300, 36, 36),
-                        SheetRegion::rect(1079, 300, 36, 36),
-                        SheetRegion::rect(1139, 300, 36, 36),
+                        // PlayerLeftAttack
+                        SheetRegion::rect(120, 364, 36, 36),
                     ],
                     0.07,
                 )
