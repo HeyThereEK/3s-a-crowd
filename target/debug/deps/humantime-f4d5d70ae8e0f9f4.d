@@ -1,0 +1,10 @@
+/Users/victorhernandez/cs181g/7-platformer-victorhernandez11/target/debug/deps/libhumantime-f4d5d70ae8e0f9f4.rmeta: /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/lib.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/duration.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/wrapper.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/date.rs
+
+/Users/victorhernandez/cs181g/7-platformer-victorhernandez11/target/debug/deps/libhumantime-f4d5d70ae8e0f9f4.rlib: /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/lib.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/duration.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/wrapper.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/date.rs
+
+/Users/victorhernandez/cs181g/7-platformer-victorhernandez11/target/debug/deps/humantime-f4d5d70ae8e0f9f4.d: /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/lib.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/duration.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/wrapper.rs /Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/date.rs
+
+/Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/lib.rs:
+/Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/duration.rs:
+/Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/wrapper.rs:
+/Users/victorhernandez/.cargo/registry/src/index.crates.io-6f17d22bba15001f/humantime-2.1.0/src/date.rs:
