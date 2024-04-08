@@ -47,6 +47,11 @@ struct Game {
     doors: Vec<(String, (u16, u16), Vec2)>,
     camera: Camera2D,
     animations: Vec<Animation>,
+    items: Vec<Item>,
+}
+
+struct Item {
+    pos: Vec2,
 }
 
 struct Enemy {
@@ -441,6 +446,7 @@ impl Game {
                 .looped()
                 .flip_horizontal(),
             ],
+            items: vec![],
         };
         game.enter_level(player_start);
         game
@@ -473,6 +479,7 @@ impl Game {
                     },
                     change_dir_timer: rand::thread_rng().gen_range(3.0..5.0),
                 }),
+                EntityType::Item => self.items.push(Item { pos: *pos }),
             }
         }
     }
@@ -719,6 +726,7 @@ impl Game {
         self.camera.screen_pos[1] =
             self.camera.screen_pos[1].clamp(0.0, (lh * TILE_SZ).max(H) as f32 - H as f32);
     }
+
     fn gather_contacts_tiles(rects: &[Rect], level: &Level, contacts: &mut Vec<Contact>) {
         for (rect_i, rect) in rects.iter().enumerate() {
             for (tr, _td) in level.tiles_within(*rect).filter(|(_, td)| td.solid) {

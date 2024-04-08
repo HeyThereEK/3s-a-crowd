@@ -1,6 +1,6 @@
-use crate::geom::*;
 use crate::grid::{self, Grid};
 use crate::TILE_SZ;
+use crate::{geom::*, Item};
 use frenderer::{
     sprites::{SheetRegion, Transform},
     Renderer,
@@ -14,6 +14,7 @@ pub enum EntityType {
     Enemy,
     // which level, grid x in dest level, grid y in dest level
     Door(String, u16, u16),
+    Item,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -184,6 +185,7 @@ impl Level {
                                 .expect("Couldn't parse y coord as u16 in {line}");
                                 EntityType::Door(to_room.to_string(), to_x, to_y)
                             }
+                            "item" => EntityType::Item,
                             _ => panic!("Unrecognized entity type in {line}"),
                         };
                         let x =
