@@ -1,1 +1,0 @@
-/Users/victorhernandez/cs181g/3s-a-crowd/target/debug/platformer: /Users/victorhernandez/cs181g/3s-a-crowd/src/animation.rs /Users/victorhernandez/cs181g/3s-a-crowd/src/geom.rs /Users/victorhernandez/cs181g/3s-a-crowd/src/grid.rs /Users/victorhernandez/cs181g/3s-a-crowd/src/level.rs /Users/victorhernandez/cs181g/3s-a-crowd/src/main.rs
