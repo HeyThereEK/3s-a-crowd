@@ -47,12 +47,12 @@ struct Game {
     doors: Vec<(String, (u16, u16), Vec2)>,
     camera: Camera2D,
     animations: Vec<Animation>,
-    items: Vec<Item>,
+    // items: Vec<Item>,
 }
 
-struct Item {
-    pos: Vec2,
-}
+// struct Item {
+//     pos: Vec2,
+// }
 
 struct Enemy {
     pos: Vec2,
@@ -446,7 +446,7 @@ impl Game {
                 .looped()
                 .flip_horizontal(),
             ],
-            items: vec![],
+            // items: vec![],
         };
         game.enter_level(player_start);
         game
@@ -479,13 +479,13 @@ impl Game {
                     },
                     change_dir_timer: rand::thread_rng().gen_range(3.0..5.0),
                 }),
-                EntityType::Item => self.items.push(Item { pos: *pos }),
+                // EntityType::Item => self.items.push(Item { pos: *pos }),
             }
         }
     }
     fn sprite_count(&self) -> usize {
         //todo!("count how many entities and other sprites we have");
-        self.level().sprite_count() + self.enemies.len() + self.items.len() + 1
+        self.level().sprite_count() + self.enemies.len() /*self.items.len()*/ + 1
     }
     fn render(&mut self, frend: &mut Renderer) {
         // make this exactly as big as we need
@@ -505,6 +505,17 @@ impl Game {
                 .sample(0.0)
                 .unwrap();
         }
+
+        // for (item, (trf, uv)) in self
+        //     .items
+        //     .iter()
+        //     .zip(sprite_posns.iter_mut().zip(sprite_gfx.iter_mut()))
+        // {
+        //     *trf = item.trf();
+        //     *uv = self.animations[AnimationKey::EnemyLeftWalk as usize]
+        //         .sample(0.0)
+        //         .unwrap();
+        // }
         let sprite_posns = &mut sprite_posns[self.enemies.len()..];
         let sprite_gfx = &mut sprite_gfx[self.enemies.len()..];
         sprite_posns[0] = self.player.trf();
@@ -657,6 +668,11 @@ impl Game {
         for contact in enemy_tile_contacts {
             let disp = Self::compute_disp(contact.a_rect, contact.b_rect);
             self.enemies[contact.a_index].pos += disp;
+        }
+
+        for contact in contacts {
+            contact.b_index;
+            self.enemies[contact.b_index].die();
         }
 
         let door_rects = self
