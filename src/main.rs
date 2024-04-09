@@ -118,8 +118,8 @@ impl Player {
                     Dir::W => 12.0,
                 },
             y: self.pos.y - 12.0,
-            w: 16,
-            h: 24,
+            w: 32,
+            h: 16,
         }
     }
     fn trf(&self) -> Transform {
