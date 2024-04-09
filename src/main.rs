@@ -416,6 +416,7 @@ impl Game {
                 .flip_horizontal(),
                 Animation::with_frames(
                     &[
+                        // enemy
                         SheetRegion::rect(0, 272, 36, 16),
                         SheetRegion::rect(36, 272, 36, 16),
                         SheetRegion::rect(36 * 2, 272, 36, 16),
@@ -431,6 +432,7 @@ impl Game {
                 .looped(),
                 Animation::with_frames(
                     &[
+                        // enemy
                         SheetRegion::rect(0, 272, 36, 16),
                         SheetRegion::rect(36, 272, 36, 16),
                         SheetRegion::rect(36 * 2, 272, 36, 16),
@@ -535,6 +537,8 @@ impl Game {
             self.player.jump_timer -= dt;
             if self.player.jump_timer <= 0.0 {
                 self.player.jumping = false;
+            } else {
+                self.player.jumping = true;
             }
         }
 
@@ -559,26 +563,25 @@ impl Game {
             .y
             .clamp(0.0, H as f32 - self.player.rect().h as f32);
 
-        self.player.grounded = self.player.pos.y <= 0.0;
-        if self.player.grounded {
-            self.player.vel.y = 0.0;
-        }
+        // self.player.grounded = self.player.pos.y <= 0.0;
+        // if self.player.grounded {
+        //     self.player.vel.y = 0.0;
+        // }
 
         if self.player.jumping {
-            match self.player.dir {
-                Dir::E => self
-                    .player
+            if self.player.vel.y > 0.0 {
+                self.player
                     .anim
-                    .play(AnimationKey::PlayerRightJumpRise, false),
-                Dir::W => self
-                    .player
+                    .play(AnimationKey::PlayerRightJumpRise, false);
+            } else {
+                self.player
                     .anim
-                    .play(AnimationKey::PlayerLeftJumpRise, false),
+                    .play(AnimationKey::PlayerRightJumpFall, false);
             }
         } else {
             match self.player.dir {
-                Dir::E => self.player.anim.play(AnimationKey::PlayerRightIdle, false),
-                Dir::W => self.player.anim.play(AnimationKey::PlayerLeftIdle, false),
+                Dir::E => self.player.anim.play(AnimationKey::PlayerRightWalk, false),
+                Dir::W => self.player.anim.play(AnimationKey::PlayerLeftWalk, false),
             }
         }
 
