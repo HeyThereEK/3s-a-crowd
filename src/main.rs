@@ -13,12 +13,16 @@ mod level;
 use level::{EntityType, Level};
 use rand::Rng;
 
+use rodio::{source::Source, Decoder, OutputStream};
+use std::fs::File;
+use std::io::BufReader;
+
 const GRAV_ACC: f32 = 300.0;
 const WALK_ACC: f32 = 180.0;
 const MAX_SPEED: f32 = 90.0;
 const BRAKE_DAMP: f32 = 0.9;
 const JUMP_VEL: f32 = 140.0;
-const JUMP_TIME_MAX: f32 = 0.15;
+const JUMP_TIME_MAX: f32 = 0.25;
 const ATTACK_MAX_TIME: f32 = 0.6;
 const ATTACK_COOLDOWN_TIME: f32 = 0.1;
 
@@ -201,6 +205,19 @@ const H: usize = 12 * TILE_SZ;
 const SCREEN_FAST_MARGIN: f32 = 64.0;
 
 fn main() {
+    // Get a output stream handle to the default physical sound device
+    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+    // Load a sound from a file, using a path relative to Cargo.toml
+    let file = BufReader::new(File::open("content/gamemusic.ogg").unwrap());
+    // Decode that sound file into a source
+    let source = Decoder::new(file).unwrap();
+    // Play the sound directly on the device
+    stream_handle.play_raw(source.convert_samples());
+
+    // The sound plays in a separate audio thread,
+    // so we need to keep the main thread alive while it's playing.
+    std::thread::sleep(std::time::Duration::from_secs(5));
+
     #[cfg(not(target_arch = "wasm32"))]
     let source =
         assets_manager::source::FileSystem::new("content").expect("Couldn't load resources");
@@ -361,7 +378,7 @@ impl Game {
                         SheetRegion::rect(180, 364, 36, 36),
                         SheetRegion::rect(240, 364, 36, 36),
                     ],
-                    0.15,
+                    0.10,
                 )
                 .looped(),
                 // PlayerRightJumpRise
@@ -490,24 +507,34 @@ impl Game {
         let sprites_used = self.level().render_into(frend, 0);
         let (sprite_posns, sprite_gfx) = frend.sprites_mut(0, sprites_used..);
 
-        for (enemy, (trf, uv)) in self
-            .enemies
-            .iter()
-            .zip(sprite_posns.iter_mut().zip(sprite_gfx.iter_mut()))
-        {
-            *trf = enemy.trf();
-            *uv = self.animations[AnimationKey::EnemyLeftWalk as usize]
-                .sample(0.0)
-                .unwrap();
-        }
+        // commented out to get rid of enemy for now
+        // for (enemy, (trf, uv)) in self
+        //     .enemies
+        //     .iter()
+        //     .zip(sprite_posns.iter_mut().zip(sprite_gfx.iter_mut()))
+        // {
+        //     *trf = enemy.trf();
+        //     *uv = self.animations[AnimationKey::EnemyLeftWalk as usize]
+        //         .sample(0.0)
+        //         .unwrap();
+        // }
         let sprite_posns = &mut sprite_posns[self.enemies.len()..];
         let sprite_gfx = &mut sprite_gfx[self.enemies.len()..];
         sprite_posns[0] = self.player.trf();
         sprite_gfx[0] = self.player.anim.sample(&self.animations);
+
+        frend.sprite_group_set_camera(
+            0,
+            Camera2D {
+                screen_pos: [(self.player.pos.x - (W / 4) as f32), 7_f32],
+                screen_size: [W as f32, H as f32],
+            },
+        );
     }
     fn simulate(&mut self, input: &Input, dt: f32) {
         let acc = Vec2 {
-            x: WALK_ACC * input.key_axis(Key::ArrowLeft, Key::ArrowRight),
+            // x: WALK_ACC * input.key_axis(Key::ArrowLeft, Key::ArrowRight),
+            x: WALK_ACC,
             y: GRAV_ACC,
         };
 
@@ -542,6 +569,7 @@ impl Game {
 
         let lw = self.level().width();
         let lh = self.level().height();
+
         self.player.pos.x = self.player.pos.x.clamp(
             0.0,
             lw as f32 * TILE_SZ as f32 - self.player.rect().w as f32 / 2.0,
@@ -561,6 +589,7 @@ impl Game {
             self.player.vel.y = 0.0;
         }
 
+        // if the player is jumping
         if self.player.jumping {
             if self.player.vel.y > 0.0 {
                 self.player
