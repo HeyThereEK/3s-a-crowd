@@ -662,6 +662,11 @@ impl Game {
             self.enemies[contact.a_index].pos += disp;
         }
 
+        for contact in contacts {
+            contact.b_index;
+            self.enemies[contact.b_index].die();
+        }
+
         let door_rects = self
             .doors
             .iter()
