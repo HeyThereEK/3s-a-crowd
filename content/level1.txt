@@ -32,6 +32,7 @@ gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc
 gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  
 ======
 player 5 7
+player 5 7
 enemy 13 8
 door level1 2 7 21 7
 door level1 2 7 14 7
