@@ -411,7 +411,7 @@ impl Game {
                 .flip_horizontal(),
                 Animation::with_frames(
                     &[
-                        // enemy
+                        // EnemyRightWalk
                         SheetRegion::rect(0, 272, 36, 16),
                         SheetRegion::rect(36, 272, 36, 16),
                         SheetRegion::rect(36 * 2, 272, 36, 16),
@@ -427,7 +427,7 @@ impl Game {
                 .looped(),
                 Animation::with_frames(
                     &[
-                        // enemy
+                        // EnemyLeftWalk
                         SheetRegion::rect(0, 272, 36, 16),
                         SheetRegion::rect(36, 272, 36, 16),
                         SheetRegion::rect(36 * 2, 272, 36, 16),
@@ -528,11 +528,7 @@ impl Game {
 
         if self.player.jumping {
             self.player.jump_timer -= dt;
-            if self.player.jump_timer <= 0.0 {
-                self.player.jumping = false;
-            } else {
-                self.player.jumping = true;
-            }
+            self.player.jumping = self.player.jump_timer > 0.0;
         }
 
         self.player.vel.y -= GRAV_ACC * dt;
@@ -556,10 +552,14 @@ impl Game {
             .y
             .clamp(0.0, H as f32 - self.player.rect().h as f32);
 
-        // self.player.grounded = self.player.pos.y <= 0.0;
-        // if self.player.grounded {
-        //     self.player.vel.y = 0.0;
-        // }
+        // if player's y position is less than or equal to 0, then they are grounded
+        // so, set grounded to True. If their y position is greater than 0, then they
+        // are not grounded, so set grounded to False.
+        self.player.grounded = self.player.pos.y <= 0.0;
+        if self.player.grounded {
+            // if the player is grounded, set their y velocity to 0
+            self.player.vel.y = 0.0;
+        }
 
         if self.player.jumping {
             if self.player.vel.y > 0.0 {
