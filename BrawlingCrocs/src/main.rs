@@ -42,7 +42,8 @@ impl Dir {
 struct Game {
     current_level: usize,
     levels: Vec<Level>,
-    player: Player,
+    player1: Player,
+    player2: Player,
     enemies: Vec<Enemy>,
     doors: Vec<(String, (u16, u16), Vec2)>,
     camera: Camera2D,
@@ -104,6 +105,7 @@ struct Player {
     jump_timer: f32,
     grounded: bool,
     attack_timer: f32,
+    controls: Vec<Key>,
 }
 impl Player {
     fn rect(&self) -> Rect {
@@ -323,14 +325,14 @@ impl Game {
             .iter()
             .find(|(t, _)| *t == EntityType::Player)
             .map(|(_, ploc)| *ploc + Vec2 { x: 0.0, y: 200.0 })
-            .expect("Start level doesn't put the player anywhere");
+            .expect("Start level doesn't put the player1 anywhere");
         let mut game = Game {
             current_level,
             camera,
             levels,
             enemies: vec![],
             doors: vec![],
-            player: Player {
+            player1: Player {
                 vel: Vec2 { x: 0.0, y: 0.0 },
                 pos: player_start,
                 dir: Dir::E,
@@ -343,6 +345,22 @@ impl Game {
                 jump_timer: 0.0,
                 grounded: true,
                 attack_timer: 0.2,
+                controls: vec![Key::KeyW, Key::KeyA, Key::KeyS, Key::KeyD, Key::KeyQ],
+            },
+            player2: Player {
+                vel: Vec2 { x: 0.0, y: 0.0 },
+                pos: player_start,
+                dir: Dir::E,
+                anim: AnimationState {
+                    animation: AnimationKey::PlayerRightIdle,
+                    t: 0.0,
+                },
+                touching_door: false,
+                jumping: false,
+                jump_timer: 0.0,
+                grounded: true,
+                attack_timer: 0.2,
+                controls: vec![Key::KeyI, Key::KeyJ, Key::KeyK, Key::KeyL, Key::KeyO],
             },
             animations: vec![
                 Animation::with_frame(SheetRegion::ZERO),
@@ -460,8 +478,8 @@ impl Game {
         self.doors.clear();
         self.enemies.clear();
         // we will probably enter at a door
-        self.player.touching_door = true;
-        self.player.pos = player_pos;
+        self.player1.touching_door = true;
+        self.player1.pos = player_pos;
         for (etype, pos) in self.levels[self.current_level].starts().iter() {
             match etype {
                 EntityType::Player => {}
@@ -508,8 +526,8 @@ impl Game {
         }
         let sprite_posns = &mut sprite_posns[self.enemies.len()..];
         let sprite_gfx = &mut sprite_gfx[self.enemies.len()..];
-        sprite_posns[0] = self.player.trf();
-        sprite_gfx[0] = self.player.anim.sample(&self.animations);
+        sprite_posns[0] = self.player1.trf();
+        sprite_gfx[0] = self.player1.anim.sample(&self.animations);
     }
     fn simulate(&mut self, input: &Input, dt: f32) {
         let acc = Vec2 {
@@ -518,72 +536,72 @@ impl Game {
         };
 
         if input.is_key_down(Key::ArrowRight) {
-            self.player.dir = Dir::E;
-            self.player.anim.play(AnimationKey::PlayerRightWalk, false);
+            self.player1.dir = Dir::E;
+            self.player1.anim.play(AnimationKey::PlayerRightWalk, false);
         } else if input.is_key_down(Key::ArrowLeft) {
-            self.player.dir = Dir::W;
-            self.player.anim.play(AnimationKey::PlayerLeftWalk, false);
+            self.player1.dir = Dir::W;
+            self.player1.anim.play(AnimationKey::PlayerLeftWalk, false);
         }
 
         // Handle jumping NOT WORKING
-        if input.is_key_down(Key::ArrowUp) && self.player.grounded {
-            self.player.jumping = true;
-            self.player.jump_timer = JUMP_TIME_MAX;
-            self.player.vel.y = JUMP_VEL;
+        if input.is_key_down(Key::ArrowUp) && self.player1.grounded {
+            self.player1.jumping = true;
+            self.player1.jump_timer = JUMP_TIME_MAX;
+            self.player1.vel.y = JUMP_VEL;
         }
 
-        if self.player.jumping {
-            self.player.jump_timer -= dt;
-            if self.player.jump_timer <= 0.0 {
-                self.player.jumping = false;
+        if self.player1.jumping {
+            self.player1.jump_timer -= dt;
+            if self.player1.jump_timer <= 0.0 {
+                self.player1.jumping = false;
             }
         }
 
-        self.player.vel.y -= GRAV_ACC * dt;
-        self.player.vel.x += acc.x * dt;
+        self.player1.vel.y -= GRAV_ACC * dt;
+        self.player1.vel.x += acc.x * dt;
         if acc.x.abs() < 0.1 {
-            self.player.vel.x *= BRAKE_DAMP;
+            self.player1.vel.x *= BRAKE_DAMP;
         }
-        self.player.vel.x = self.player.vel.x.clamp(-MAX_SPEED, MAX_SPEED);
+        self.player1.vel.x = self.player1.vel.x.clamp(-MAX_SPEED, MAX_SPEED);
 
-        self.player.pos += self.player.vel * dt;
+        self.player1.pos += self.player1.vel * dt;
 
         let lw = self.level().width();
         let lh = self.level().height();
-        self.player.pos.x = self.player.pos.x.clamp(
+        self.player1.pos.x = self.player1.pos.x.clamp(
             0.0,
-            lw as f32 * TILE_SZ as f32 - self.player.rect().w as f32 / 2.0,
+            lw as f32 * TILE_SZ as f32 - self.player1.rect().w as f32 / 2.0,
         );
-        self.player.pos.y = self
-            .player
+        self.player1.pos.y = self
+            .player1
             .pos
             .y
-            .clamp(0.0, H as f32 - self.player.rect().h as f32);
+            .clamp(0.0, H as f32 - self.player1.rect().h as f32);
 
-        self.player.grounded = self.player.pos.y <= 0.0;
-        if self.player.grounded {
-            self.player.vel.y = 0.0;
+        self.player1.grounded = self.player1.pos.y <= 0.0;
+        if self.player1.grounded {
+            self.player1.vel.y = 0.0;
         }
 
-        if self.player.jumping {
-            match self.player.dir {
+        if self.player1.jumping {
+            match self.player1.dir {
                 Dir::E => self
-                    .player
+                    .player1
                     .anim
                     .play(AnimationKey::PlayerRightJumpRise, false),
                 Dir::W => self
-                    .player
+                    .player1
                     .anim
                     .play(AnimationKey::PlayerLeftJumpRise, false),
             }
         } else {
-            match self.player.dir {
-                Dir::E => self.player.anim.play(AnimationKey::PlayerRightIdle, false),
-                Dir::W => self.player.anim.play(AnimationKey::PlayerLeftIdle, false),
+            match self.player1.dir {
+                Dir::E => self.player1.anim.play(AnimationKey::PlayerRightIdle, false),
+                Dir::W => self.player1.anim.play(AnimationKey::PlayerLeftIdle, false),
             }
         }
 
-        self.player.anim.tick(dt);
+        self.player1.anim.tick(dt);
 
         // Enemy calculations
         for enemy in self.enemies.iter_mut() {
@@ -624,7 +642,7 @@ impl Game {
         // Door collision and response
         let mut triggers = vec![];
         let mut contacts = vec![];
-        let prect = self.player.rect();
+        let prect = self.player1.rect();
 
         let enemy_rects = self
             .enemies
@@ -645,28 +663,28 @@ impl Game {
 
         self::Game::gather_contacts(&[prect], &enemy_rects, &mut contacts);
 
-        self.player.grounded = false;
+        self.player1.grounded = false;
         for contact in player_tile_contacts {
-            let disp = Self::compute_disp(self.player.rect(), contact.b_rect);
-            self.player.pos += disp;
+            let disp = Self::compute_disp(self.player1.rect(), contact.b_rect);
+            self.player1.pos += disp;
             if disp.y > 0.0 {
-                self.player.grounded = true;
-                self.player.vel.y = 0.0;
+                self.player1.grounded = true;
+                self.player1.vel.y = 0.0;
             }
         }
 
         // Attacks
         let mut attack_contacts = vec![];
 
-        if input.is_key_down(Key::Space) && self.player.attack_timer > ATTACK_COOLDOWN_TIME {
-            self.player.anim.play(
-                match self.player.dir {
+        if input.is_key_down(Key::Space) && self.player1.attack_timer > ATTACK_COOLDOWN_TIME {
+            self.player1.anim.play(
+                match self.player1.dir {
                     Dir::E => AnimationKey::PlayerRightAttack,
                     Dir::W => AnimationKey::PlayerLeftAttack,
                 },
                 false,
             );
-            self.player.attack_timer = 0.0;
+            self.player1.attack_timer = 0.0;
         }
 
         // self::Game::gather_contacts(&[attack_rect], &enemy_rects, &mut attack_contacts);
@@ -689,12 +707,12 @@ impl Game {
             .collect::<Vec<_>>();
         self::Game::gather_contacts(&[prect], &door_rects, &mut triggers);
         if triggers.is_empty() {
-            self.player.touching_door = false;
+            self.player1.touching_door = false;
         }
         for Contact { b_index: door, .. } in triggers.drain(..) {
-            // enter door if player has moved, wasn't previously touching door
-            if !self.player.touching_door {
-                self.player.touching_door = true;
+            // enter door if player1 has moved, wasn't previously touching door
+            if !self.player1.touching_door {
+                self.player1.touching_door = true;
                 let (door_to, door_to_pos, _door_pos) = &self.doors[door];
                 let dest = self
                     .levels
@@ -702,7 +720,7 @@ impl Game {
                     .position(|l| l.name() == door_to)
                     .expect("door to invalid room {door_to}!");
                 if dest == self.current_level {
-                    self.player.pos = self
+                    self.player1.pos = self
                         .level()
                         .grid_to_world((door_to_pos.0 as usize, door_to_pos.1 as usize))
                         + Vec2 {
@@ -723,20 +741,20 @@ impl Game {
                 break;
             }
         }
-        while self.player.pos.x
+        while self.player1.pos.x
             > self.camera.screen_pos[0] + self.camera.screen_size[0] - SCREEN_FAST_MARGIN
         {
             self.camera.screen_pos[0] += 1.0;
         }
-        while self.player.pos.x < self.camera.screen_pos[0] + SCREEN_FAST_MARGIN {
+        while self.player1.pos.x < self.camera.screen_pos[0] + SCREEN_FAST_MARGIN {
             self.camera.screen_pos[0] -= 1.0;
         }
-        while self.player.pos.y
+        while self.player1.pos.y
             > self.camera.screen_pos[1] + self.camera.screen_size[1] - SCREEN_FAST_MARGIN
         {
             self.camera.screen_pos[1] += 1.0;
         }
-        while self.player.pos.y < self.camera.screen_pos[1] + SCREEN_FAST_MARGIN {
+        while self.player1.pos.y < self.camera.screen_pos[1] + SCREEN_FAST_MARGIN {
             self.camera.screen_pos[1] -= 1.0;
         }
         self.camera.screen_pos[0] =
@@ -796,7 +814,7 @@ impl Game {
         displacement
     }
 
-    // collision response for the player and enemies, give the player knockback and lose one heart
+    // collision response for the player1 and enemies, give the player1 knockback and lose one heart
     // fn player_enemy_collision_response(&mut self, contacts: &mut [Contact]) {
     //     for contact in contacts {
     //         if self.knockback_timer > 0.0 {
@@ -807,7 +825,7 @@ impl Game {
     //     }
     // }
 
-    // collision response for the player's attack and enemies, remove the enemy
+    // collision response for the player1's attack and enemies, remove the enemy
     fn attack_enemy_collision_response(&mut self, contacts: &mut [Contact]) {
         let mut to_remove = vec![];
         for contact in contacts {

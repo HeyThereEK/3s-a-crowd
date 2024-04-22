@@ -17,13 +17,13 @@ docr o 16 224 16 16
 dobl o 0 240 16 16
 dobr o 16 240 16 16
 ======
-gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
-gdc  air  air  air  air  air  air  dotl dotr gdc  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
-gdc  air  air  air  air  air  air  docl docr gdc  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
-gdc  air  air  air  air  air  air  dobl dobr gdc  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
-gdc  air  air  air  air  gdfc gdfc gdfc gdfc gdfc air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
-gdc  air  air  air  air  gdc  gdc  gdc  gdc  gdc  air  air  air  air  air  air  air  air  air  air  air  dotl dotr air  air  air  air  air  air  air  air  air  
-gdc  gdfc gdfc air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  docl docr air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  dotl dotr air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  docl docr air  air  air  air  air  air  air  air  air  
 air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  dobl dobr air  air  air  air  air  air  air  air  air  
 air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  gdfc gdfc gdfc gdfc gdfc gdfc air  air  air  air  air  air  air  
 gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdc  gdc  gdc  gdc  gdc  gdc  gdfc gdfc gdfc gdfc gdfc gdfc gdfc
