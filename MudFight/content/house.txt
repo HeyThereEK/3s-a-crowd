@@ -1,0 +1,38 @@
+house 16 12
+bg 144 80 2 2
+======
+air  o 144 80 2 2
+gdc  s 16 16 16 16
+gdfc s 16 0 16 16
+dctl o 32 208 16 16
+dctr o 48 208 16 16
+dccl o 32 224 16 16
+dccr o 48 224 16 16
+dcbl o 32 240 16 16
+dcbr o 48 240 16 16
+dotl o 0 208 16 16
+dotr o 16 208 16 16
+docl o 0 224 16 16
+docr o 16 224 16 16
+dobl o 0 240 16 16
+dobr o 16 240 16 16
+bchl s 0 176 16 16 
+bchc s 16 176 16 16 
+bchr s 32 176 16 16
+empt s 112 64 16 16
+======
+empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt
+empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt
+empt empt empt empt air  air  air  air  air  air  air  air  empt empt empt empt
+empt empt empt empt air  air  air  air  air  air  air  air  empt empt empt empt
+empt empt empt empt air  dotl dotr air  air  air  air  air  empt empt empt empt
+empt empt empt empt air  docl docr air  air  air  air  air  empt empt empt empt
+empt empt empt empt air  dobl dobr air  air  bchl bchc bchr empt empt empt empt
+empt empt empt empt gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc empt empt empt empt
+empt empt empt empt gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  empt empt empt empt
+empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt
+empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt
+empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt
+======
+enemy 10 5
+door level1 7 2 5 6
