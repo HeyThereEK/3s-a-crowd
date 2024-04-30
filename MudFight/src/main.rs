@@ -318,18 +318,18 @@ impl Game {
                     .expect("Couldn't access level1.txt")
                     .read(),
             ),
-            Level::from_str(
-                &cache
-                    .load::<String>("house")
-                    .expect("Couldn't access house.txt")
-                    .read(),
-            ),
-            Level::from_str(
-                &cache
-                    .load::<String>("shop")
-                    .expect("Couldn't access shop.txt")
-                    .read(),
-            ),
+            // Level::from_str(
+            //     &cache
+            //         .load::<String>("house")
+            //         .expect("Couldn't access house.txt")
+            //         .read(),
+            // ),
+            // Level::from_str(
+            //     &cache
+            //         .load::<String>("shop")
+            //         .expect("Couldn't access shop.txt")
+            //         .read(),
+            // ),
         ];
         let current_level = 0;
         let camera = Camera2D {
