@@ -1,16 +1,25 @@
-level1 32 12
+level1 128 13
 bg 144 80 2 2
 ======
 air  o 144 80 2 2
-gdc  s 16 16 16 16
-gdfc s 16 0 16 16
+airg o 0 32 32 32
+trt  o 32 32 32 32
+trm  o 32 64 32 32
+trb  o 32 96 32 32
+gdc  s 0 0 32 32
+gdfc s 64 80 32 32
 dctl o 32 208 16 16
 dctr o 48 208 16 16
 dccl o 32 224 16 16
 dccr o 48 224 16 16
 dcbl o 32 240 16 16
 dcbr o 48 240 16 16
-ws   o 16 192 16 16
+ws   o 96 0 32 32
+wsl  o 128 0 32 32
+wsr  o 160 0 32 32
+wbl  o 128 32 32 32
+wbr  o 160 32 32 32
+wsb  o 96 32 32 32
 dotl o 0 208 16 16
 dotr o 16 208 16 16
 docl o 0 224 16 16
@@ -18,23 +27,93 @@ docr o 16 224 16 16
 dobl o 0 240 16 16
 dobr o 16 240 16 16
 ======
-air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
-air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
-air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
-air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
-air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
-air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
-air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
-air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
-air  air  air  air  air  air  gdfc  gdfc gdfc gdfc  air  air  air  ws  air  air  air  air  air  air  ws  air  air  air  air  air  air  air  air  air  air  air 
-gdfc gdfc gdfc gdfc gdfc gdfc gdc gdc gdc gdc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc  gdfc  gdfc  gdfc  gdfc  gdfc  gdfc gdfc gdfc gdfc gdfc gdfc gdfc
-gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  
-gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
+air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  trt
+air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  trm 
+air  air  air  air  air  air  air  air  air  air  air  trb  air  air  air  air  air  air  air  air  air  ws   air  trb  wsl  wsr  air  air  air  air  air  ws   air  air  air  air  wsl  wsr  ws   trb  air  air  air  air  air  air  ws   air  air  air  air  wsl  wsr  trb  air  air  ws   air  air  air  air  ws   air  wsl  wsr  air  air  air  air  trb  air  ws   air  wsl  wsr  air  air  air  air  air  air  ws   air  air  trb  air  ws   air  air  wsl  wsr  air  trb  air  air  air  ws   air  air  air  ws   air  air  wsl  wsr  air  ws   wsl  wsr  air  air  air  air  ws   air  ws   trb  air  wsl  wsr  air  air  wsl  wsr  wsl  wsr  ws  trb
+gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  wbl  wbr  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  gdc  gdc  wbl  wbr  wsb  gdc  gdc  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  gdc  gdc  wbl  wbr  gdc  gdc  gdc  wsb  gdc  gdc  gdc  gdc  wsb  gdc  wbl  wbr  gdc  gdc  gdc  gdc  gdc  gdc  wsb  gdc  wbl  wbr  gdc  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  gdc  gdc  wsb  gdc  gdc  wbl  wbr  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  gdc  wsb  gdc  gdc  wbl  wbr  gdc  wsb  wbl  wbr  gdc  gdc  gdc  gdc  wsb  gdc  wsb  gdc  gdc  wbl  wbr  gdc  gdc  wbl  wbr  wbl  wbr  wsb  gdc 
+airg  airg  airg  airg  airg  airg  airg  airg airg airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg airg airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg airg airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  airg  
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  trt  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trt
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  trm  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trm 
+air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  trb  air  air  air  ws   air  air  wsl  wsr  air  air  air  air  air  ws   air  trb  air  air  wsl  wsr  ws   air  air  air  air  air  air  air  ws   air  air  air  air  wsl  wsr  air  air  air  ws   air  air  trb  air  ws   air  wsl  wsr  air  air  air  air  air  air  ws   air  wsl  wsr  air  trb  air  air  air  air  ws   air  air  air  air  ws   air  trb  wsl  wsr  air  air  air  air  air  ws   air  air  air  ws   trb  air  wsl  wsr  air  ws   wsl  wsr  air  air  trb  air  ws   air  ws   air  air  wsl  wsr  air  air  wsl  wsr  wsl  wsr  ws   trb
+gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  wbl  wbr  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  gdc  gdc  wbl  wbr  wsb  gdc  gdc  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  gdc  gdc  wbl  wbr  gdc  gdc  gdc  wsb  gdc  gdc  gdc  gdc  wsb  gdc  wbl  wbr  gdc  gdc  gdc  gdc  gdc  gdc  wsb  gdc  wbl  wbr  gdc  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  gdc  gdc  wsb  gdc  gdc  wbl  wbr  gdc  gdc  gdc  gdc  gdc  wsb  gdc  gdc  gdc  wsb  gdc  gdc  wbl  wbr  gdc  wsb  wbl  wbr  gdc  gdc  gdc  gdc  wsb  gdc  wsb  gdc  gdc  wbl  wbr  gdc  gdc  wbl  wbr  wbl  wbr  wsb  gdc 
+gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc  gdfc  gdfc  gdfc  gdfc  gdfc  gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc  gdfc  gdfc  gdfc  gdfc  gdfc  gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc  gdfc  gdfc  gdfc  gdfc  gdfc  gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc gdfc  gdfc  gdfc  gdfc  gdfc  gdfc  gdfc gdfc gdfc gdfc gdfc gdfc gdfc
 ======
-player 5 7
-player 5 7
-enemy 13 8
-door level1 2 7 21 7
-door level1 2 7 14 7
-
-item 2 12
+player 5 8
+player 5 11
+mud 21 5
+mud 24 5
+mud 25 5
+mud 31 5
+mud 36 5
+mud 37 5
+mud 38 5
+mud 46 5
+mud 51 5
+mud 52 5
+mud 56 5
+mud 61 5
+mud 63 5
+mud 64 5
+mud 71 5
+mud 73 5
+mud 74 5
+mud 81 5
+mud 86 5
+mud 89 5
+mud 90 5
+mud 96 5
+mud 100 5
+mud 103 5
+mud 104 5
+mud 106 5
+mud 107 5
+mud 108 5
+mud 113 5
+mud 115 5
+mud 118 5
+mud 119 5
+mud 222 5
+mud 223 5
+mud 224 5
+mud 225 5
+mud 226 5
+mud 21 11
+mud 24 11
+mud 25 11
+mud 31 11
+mud 36 11
+mud 37 11
+mud 38 11
+mud 46 11
+mud 51 11
+mud 52 11
+mud 56 11
+mud 61 11
+mud 63 11
+mud 64 11
+mud 71 11
+mud 73 11
+mud 74 11
+mud 81 11
+mud 86 11
+mud 89 11
+mud 90 11
+mud 96 11
+mud 100 11
+mud 103 11
+mud 104 11
+mud 106 11
+mud 107 11
+mud 108 11
+mud 113 11
+mud 115 11
+mud 118 11
+mud 119 11
+mud 222 11
+mud 223 11
+mud 224 11
+mud 225 11
+mud 226 11

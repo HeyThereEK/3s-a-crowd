@@ -1,6 +1,6 @@
+use crate::geom::*;
 use crate::grid::{self, Grid};
 use crate::TILE_SZ;
-use crate::{geom::*, Item};
 use frenderer::{
     sprites::{SheetRegion, Transform},
     Renderer,
@@ -13,8 +13,8 @@ pub enum EntityType {
     Player,
     Enemy,
     // which level, grid x in dest level, grid y in dest level
-    Door(String, u16, u16),
-    Item,
+    // Door(String, u16, u16),
+    Mud,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -173,19 +173,19 @@ impl Level {
                         let etype = match etype {
                             "player" => EntityType::Player,
                             "enemy" => EntityType::Enemy,
-                            "door" => {
-                                let to_room = chunks.next().expect("Couldn't get dest room {line}");
-                                let to_x = u16::from_str(
-                                    chunks.next().expect("No dest x coord in door line {line}"),
-                                )
-                                .expect("Couldn't parse x coord as u16 in {line}");
-                                let to_y = u16::from_str(
-                                    chunks.next().expect("No dest y coord in door line {line}"),
-                                )
-                                .expect("Couldn't parse y coord as u16 in {line}");
-                                EntityType::Door(to_room.to_string(), to_x, to_y)
-                            }
-                            "item" => EntityType::Item,
+                            // "door" => {
+                            //     let to_room = chunks.next().expect("Couldn't get dest room {line}");
+                            //     let to_x = u16::from_str(
+                            //         chunks.next().expect("No dest x coord in door line {line}"),
+                            //     )
+                            //     .expect("Couldn't parse x coord as u16 in {line}");
+                            //     let to_y = u16::from_str(
+                            //         chunks.next().expect("No dest y coord in door line {line}"),
+                            //     )
+                            //     .expect("Couldn't parse y coord as u16 in {line}");
+                            //     EntityType::Door(to_room.to_string(), to_x, to_y)
+                            // }
+                            "mud" => EntityType::Mud,
                             _ => panic!("Unrecognized entity type in {line}"),
                         };
                         let x =
