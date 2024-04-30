@@ -9,6 +9,7 @@ winit = "0.29"
 image = {version="0.24.7", features=["png"]}
 assets_manager = { version = "0.11", features = ["png", "hot-reloading", "embedded"] }
 rand = "0.8.5"
+rodio = "0.17.3"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
 features=["js"]

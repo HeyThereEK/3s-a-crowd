@@ -13,12 +13,16 @@ mod level;
 use level::{EntityType, Level};
 use rand::Rng;
 
+use rodio::{source::Source, Decoder, OutputStream};
+use std::fs::File;
+use std::io::BufReader;
+
 const GRAV_ACC: f32 = 300.0;
 const WALK_ACC: f32 = 180.0;
 const MAX_SPEED: f32 = 90.0;
 const BRAKE_DAMP: f32 = 0.9;
 const JUMP_VEL: f32 = 140.0;
-const JUMP_TIME_MAX: f32 = 0.15;
+const JUMP_TIME_MAX: f32 = 0.25;
 const ATTACK_MAX_TIME: f32 = 0.6;
 const ATTACK_COOLDOWN_TIME: f32 = 0.1;
 
@@ -47,11 +51,6 @@ struct Game {
     doors: Vec<(String, (u16, u16), Vec2)>,
     camera: Camera2D,
     animations: Vec<Animation>,
-    items: Vec<Item>,
-}
-
-struct Item {
-    pos: Vec2,
 }
 
 struct Enemy {
@@ -118,8 +117,8 @@ impl Player {
                     Dir::W => 12.0,
                 },
             y: self.pos.y - 12.0,
-            w: 32,
-            h: 16,
+            w: 16,
+            h: 24,
         }
     }
     fn trf(&self) -> Transform {
@@ -206,6 +205,19 @@ const H: usize = 12 * TILE_SZ;
 const SCREEN_FAST_MARGIN: f32 = 64.0;
 
 fn main() {
+    // Get a output stream handle to the default physical sound device
+    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+    // Load a sound from a file, using a path relative to Cargo.toml
+    let file = BufReader::new(File::open("content/gamemusic.ogg").unwrap());
+    // Decode that sound file into a source
+    let source = Decoder::new(file).unwrap();
+    // Play the sound directly on the device
+    stream_handle.play_raw(source.convert_samples());
+
+    // The sound plays in a separate audio thread,
+    // so we need to keep the main thread alive while it's playing.
+    std::thread::sleep(std::time::Duration::from_secs(5));
+
     #[cfg(not(target_arch = "wasm32"))]
     let source =
         assets_manager::source::FileSystem::new("content").expect("Couldn't load resources");
@@ -296,18 +308,18 @@ impl Game {
                     .expect("Couldn't access level1.txt")
                     .read(),
             ),
-            Level::from_str(
-                &cache
-                    .load::<String>("house")
-                    .expect("Couldn't access house.txt")
-                    .read(),
-            ),
-            Level::from_str(
-                &cache
-                    .load::<String>("shop")
-                    .expect("Couldn't access shop.txt")
-                    .read(),
-            ),
+            // Level::from_str(
+            //     &cache
+            //         .load::<String>("house")
+            //         .expect("Couldn't access house.txt")
+            //         .read(),
+            // ),
+            // Level::from_str(
+            //     &cache
+            //         .load::<String>("shop")
+            //         .expect("Couldn't access shop.txt")
+            //         .read(),
+            // ),
         ];
         let current_level = 0;
         let camera = Camera2D {
@@ -366,7 +378,7 @@ impl Game {
                         SheetRegion::rect(180, 364, 36, 36),
                         SheetRegion::rect(240, 364, 36, 36),
                     ],
-                    0.15,
+                    0.10,
                 )
                 .looped(),
                 // PlayerRightJumpRise
@@ -416,7 +428,7 @@ impl Game {
                 .flip_horizontal(),
                 Animation::with_frames(
                     &[
-                        // enemy
+                        // EnemyRightWalk
                         SheetRegion::rect(0, 272, 36, 16),
                         SheetRegion::rect(36, 272, 36, 16),
                         SheetRegion::rect(36 * 2, 272, 36, 16),
@@ -432,7 +444,7 @@ impl Game {
                 .looped(),
                 Animation::with_frames(
                     &[
-                        // enemy
+                        // EnemyLeftWalk
                         SheetRegion::rect(0, 272, 36, 16),
                         SheetRegion::rect(36, 272, 36, 16),
                         SheetRegion::rect(36 * 2, 272, 36, 16),
@@ -448,7 +460,6 @@ impl Game {
                 .looped()
                 .flip_horizontal(),
             ],
-            items: vec![],
         };
         game.enter_level(player_start);
         game
@@ -481,13 +492,12 @@ impl Game {
                     },
                     change_dir_timer: rand::thread_rng().gen_range(3.0..5.0),
                 }),
-                EntityType::Item => self.items.push(Item { pos: *pos }),
             }
         }
     }
     fn sprite_count(&self) -> usize {
         //todo!("count how many entities and other sprites we have");
-        self.level().sprite_count() + self.enemies.len() + self.items.len() + 1
+        self.level().sprite_count() + self.enemies.len() + 1
     }
     fn render(&mut self, frend: &mut Renderer) {
         // make this exactly as big as we need
@@ -497,24 +507,34 @@ impl Game {
         let sprites_used = self.level().render_into(frend, 0);
         let (sprite_posns, sprite_gfx) = frend.sprites_mut(0, sprites_used..);
 
-        for (enemy, (trf, uv)) in self
-            .enemies
-            .iter()
-            .zip(sprite_posns.iter_mut().zip(sprite_gfx.iter_mut()))
-        {
-            *trf = enemy.trf();
-            *uv = self.animations[AnimationKey::EnemyLeftWalk as usize]
-                .sample(0.0)
-                .unwrap();
-        }
+        // commented out to get rid of enemy for now
+        // for (enemy, (trf, uv)) in self
+        //     .enemies
+        //     .iter()
+        //     .zip(sprite_posns.iter_mut().zip(sprite_gfx.iter_mut()))
+        // {
+        //     *trf = enemy.trf();
+        //     *uv = self.animations[AnimationKey::EnemyLeftWalk as usize]
+        //         .sample(0.0)
+        //         .unwrap();
+        // }
         let sprite_posns = &mut sprite_posns[self.enemies.len()..];
         let sprite_gfx = &mut sprite_gfx[self.enemies.len()..];
         sprite_posns[0] = self.player.trf();
         sprite_gfx[0] = self.player.anim.sample(&self.animations);
+
+        frend.sprite_group_set_camera(
+            0,
+            Camera2D {
+                screen_pos: [(self.player.pos.x - (W / 4) as f32), 7_f32],
+                screen_size: [W as f32, H as f32],
+            },
+        );
     }
     fn simulate(&mut self, input: &Input, dt: f32) {
         let acc = Vec2 {
-            x: WALK_ACC * input.key_axis(Key::ArrowLeft, Key::ArrowRight),
+            // x: WALK_ACC * input.key_axis(Key::ArrowLeft, Key::ArrowRight),
+            x: WALK_ACC,
             y: GRAV_ACC,
         };
 
@@ -535,11 +555,7 @@ impl Game {
 
         if self.player.jumping {
             self.player.jump_timer -= dt;
-            if self.player.jump_timer <= 0.0 {
-                self.player.jumping = false;
-            } else {
-                self.player.jumping = true;
-            }
+            self.player.jumping = self.player.jump_timer > 0.0;
         }
 
         self.player.vel.y -= GRAV_ACC * dt;
@@ -553,6 +569,7 @@ impl Game {
 
         let lw = self.level().width();
         let lh = self.level().height();
+
         self.player.pos.x = self.player.pos.x.clamp(
             0.0,
             lw as f32 * TILE_SZ as f32 - self.player.rect().w as f32 / 2.0,
@@ -563,11 +580,16 @@ impl Game {
             .y
             .clamp(0.0, H as f32 - self.player.rect().h as f32);
 
-        // self.player.grounded = self.player.pos.y <= 0.0;
-        // if self.player.grounded {
-        //     self.player.vel.y = 0.0;
-        // }
+        // if player's y position is less than or equal to 0, then they are grounded
+        // so, set grounded to True. If their y position is greater than 0, then they
+        // are not grounded, so set grounded to False.
+        self.player.grounded = self.player.pos.y <= 0.0;
+        if self.player.grounded {
+            // if the player is grounded, set their y velocity to 0
+            self.player.vel.y = 0.0;
+        }
 
+        // if the player is jumping
         if self.player.jumping {
             if self.player.vel.y > 0.0 {
                 self.player
@@ -662,11 +684,6 @@ impl Game {
             self.enemies[contact.a_index].pos += disp;
         }
 
-        for contact in contacts {
-            contact.b_index;
-            self.enemies[contact.b_index].die();
-        }
-
         let door_rects = self
             .doors
             .iter()
@@ -734,7 +751,6 @@ impl Game {
         self.camera.screen_pos[1] =
             self.camera.screen_pos[1].clamp(0.0, (lh * TILE_SZ).max(H) as f32 - H as f32);
     }
-
     fn gather_contacts_tiles(rects: &[Rect], level: &Level, contacts: &mut Vec<Contact>) {
         for (rect_i, rect) in rects.iter().enumerate() {
             for (tr, _td) in level.tiles_within(*rect).filter(|(_, td)| td.solid) {
