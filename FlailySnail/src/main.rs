@@ -206,19 +206,7 @@ const H: usize = 12 * TILE_SZ;
 const SCREEN_FAST_MARGIN: f32 = 64.0;
 
 fn main() {
-    // Get a output stream handle to the default physical sound device
-    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-    // Load a sound from a file, using a path relative to Cargo.toml
-    let file = BufReader::new(File::open("/Users/abraham/Desktop/gamenginepro/3s-a-crowd/FlailySnail/content/gamemusic.ogg").unwrap());
-    // Decode that sound file into a source
-    let source = Decoder::new(file).unwrap();
-    // Play the sound directly on the device
-    stream_handle.play_raw(source.convert_samples());
-
-    // The sound plays in a separate audio thread,
-    // so we need to keep the main thread alive while it's playing.
-    std::thread::sleep(std::time::Duration::from_secs(5));
-
+ 
     #[cfg(not(target_arch = "wasm32"))]
     let source =
         assets_manager::source::FileSystem::new("/Users/abraham/Desktop/gamenginepro/3s-a-crowd/FlailySnail/content").expect("Couldn't load resources");
@@ -235,12 +223,14 @@ fn main() {
 
     const DT: f32 = 1.0 / 60.0;
     let mut input = Input::default();
+    
 
     let mut now = frenderer::clock::Instant::now();
     let mut acc = 0.0;
     drv.run_event_loop::<(), _>(
         move |window, mut frend| {
             let game = Game::new(&mut frend, &cache);
+
             (window, game, frend)
         },
         move |event, target, (window, ref mut game, ref mut frend)| {
@@ -280,6 +270,7 @@ fn main() {
                     game.render(frend);
                     frend.render();
                     window.request_redraw();
+                    
                 }
                 event => {
                     input.process_input_event(&event);
@@ -288,6 +279,7 @@ fn main() {
         },
     )
     .expect("event loop error");
+
 }
 
 impl Game {
@@ -479,7 +471,9 @@ impl Game {
             ],
         };
         game.enter_level(player_start);
+
         game
+
     }
     fn level(&self) -> &Level {
         &self.levels[self.current_level]

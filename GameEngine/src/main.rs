@@ -1,5 +1,3 @@
-use std::char::MAX;
-
 use assets_manager::{asset::Png, AssetCache};
 use frenderer::{
     input::{Input, Key},
@@ -23,8 +21,6 @@ const MAX_SPEED: f32 = 90.0;
 const BRAKE_DAMP: f32 = 0.9;
 const JUMP_VEL: f32 = 140.0;
 const JUMP_TIME_MAX: f32 = 0.25;
-const ATTACK_MAX_TIME: f32 = 0.6;
-const ATTACK_COOLDOWN_TIME: f32 = 0.1;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Dir {
@@ -47,9 +43,14 @@ struct Game {
     current_level: usize,
     levels: Vec<Level>,
     player: Player,
-    obstacles: Vec<(String, (u16, u16), Vec2)>,
+    world: World,
     camera: Camera2D,
     animations: Vec<Animation>,
+}
+
+pub struct World {
+    obstacles: Vec<(String, (u16, u16), Vec2)>,
+    music_path: String
 }
 
 struct Contact {
@@ -144,11 +145,35 @@ const W: usize = 16 * TILE_SZ;
 const H: usize = 12 * TILE_SZ;
 const SCREEN_FAST_MARGIN: f32 = 64.0;
 
+
+
+impl World {
+    pub fn set_music_path(music_path: String, world: &mut World) {
+        world.music_path = music_path;
+    }
+
+    pub fn generate_obstacles(obs: Vec<(String, Vec2)>) -> Vec<(String, (u16, u16), Vec2)> {
+        let mut rng = rand::thread_rng();
+        let map_width: u16 = 800; // Assuming a map width of 800 units
+    
+        let mut obstacles = Vec::new();
+    
+        for (name, size) in obs {
+            let x = rng.gen_range(0..=map_width - size.x as u16); // Random x position within the map bounds
+            let y = 0; // Obstacles are placed at y = 0 (ground level)
+            obstacles.push((name, (x, y), size));
+        }
+    
+        obstacles
+    }
+}
+
 fn main() {
+    let world = World { obstacles: vec![], music_path: "".to_string() };
     // Get a output stream handle to the default physical sound device
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
     // Load a sound from a file, using a path relative to Cargo.toml
-    let file = BufReader::new(File::open("content/gamemusic.ogg").unwrap());
+    let file = BufReader::new(File::open(world.music_path.clone()).unwrap());
     // Decode that sound file into a source
     let source = Decoder::new(file).unwrap();
     // Play the sound directly on the device
@@ -157,7 +182,7 @@ fn main() {
     // The sound plays in a separate audio thread,
     // so we need to keep the main thread alive while it's playing.
     std::thread::sleep(std::time::Duration::from_secs(5));
-
+    
     #[cfg(not(target_arch = "wasm32"))]
     let source =
         assets_manager::source::FileSystem::new("content").expect("Couldn't load resources");
@@ -179,9 +204,10 @@ fn main() {
     let mut acc = 0.0;
     drv.run_event_loop::<(), _>(
         move |window, mut frend| {
-            let game = Game::new(&mut frend, &cache);
+            let game = Game::new(&mut frend, &cache, world);
             (window, game, frend)
         },
+
         move |event, target, (window, ref mut game, ref mut frend)| {
             use winit::event::{Event, WindowEvent};
             match event {
@@ -230,7 +256,7 @@ fn main() {
 }
 
 impl Game {
-    fn new(renderer: &mut Renderer, cache: &AssetCache) -> Self {
+    fn new(renderer: &mut Renderer, cache: &AssetCache, worldly: World) -> Self {
         let tile_handle = cache
             .load::<Png>("tileset")
             .expect("Couldn't load tilesheet img");
@@ -284,7 +310,7 @@ impl Game {
             current_level,
             camera,
             levels,
-            obstacles: vec![],
+            world: worldly,
             player: Player {
                 vel: Vec2 { x: 0.0, y: 0.0 },
                 pos: player_start,
@@ -374,14 +400,14 @@ impl Game {
         &self.levels[self.current_level]
     }
     fn enter_level(&mut self, player_pos: Vec2) {
-        self.obstacles.clear();
+        self.world.obstacles.clear();
         // we will probably enter at a obstacle
         self.player.touching_obstacle = true;
         self.player.pos = player_pos;
         for (etype, pos) in self.levels[self.current_level].starts().iter() {
             match etype {
                 EntityType::Player => {}
-                EntityType::Obstacle(rm, x, y) => self.obstacles.push((rm.clone(), (*x, *y), *pos)),
+                EntityType::Obstacle(rm, x, y) => self.world.obstacles.push((rm.clone(), (*x, *y), *pos)),
             }
         }
     }
@@ -489,7 +515,9 @@ impl Game {
         let mut triggers = vec![];
         let prect = self.player.rect();
 
-        let mut player_tile_contacts: Vec<_> = vec![];
+        let mut player_tile_contacts = vec![];
+
+        Self::gather_contacts_tiles(&[prect], self.level(), &mut player_tile_contacts);
 
         self.player.grounded = false;
         for contact in player_tile_contacts {
@@ -501,7 +529,7 @@ impl Game {
             }
         }
 
-        let obstacle_rects = self
+        let obstacle_rects = self.world
             .obstacles
             .iter()
             .map(|(_, _, pos)| Rect {
@@ -516,10 +544,10 @@ impl Game {
             self.player.touching_obstacle = false;
         }
         for Contact { b_index: obstacle, .. } in triggers.drain(..) {
-            // enter obstacle if player has moved, wasn't previously touching obstacle
+            // hit obstacle if player has moved, wasn't previously touching obstacle
             if !self.player.touching_obstacle {
                 self.player.touching_obstacle = true;
-                let (obstacle_to, obstacle_to_pos, _obstacle_pos) = &self.obstacles[obstacle];
+                let (obstacle_to, obstacle_to_pos, _obstacle_pos) = &self.world.obstacles[obstacle];
                 let dest = self
                     .levels
                     .iter()
