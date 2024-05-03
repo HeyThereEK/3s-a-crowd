@@ -11,7 +11,6 @@ mod grid;
 use geom::*;
 mod level;
 use level::{EntityType, Level};
-use rand::Rng;
 
 use rodio::{source::Source, Decoder, OutputStream};
 use std::fs::File;
@@ -23,8 +22,6 @@ const MAX_SPEED: f32 = 90.0;
 const BRAKE_DAMP: f32 = 0.9;
 const JUMP_VEL: f32 = 140.0;
 const JUMP_TIME_MAX: f32 = 0.25;
-const ATTACK_MAX_TIME: f32 = 0.6;
-const ATTACK_COOLDOWN_TIME: f32 = 0.1;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Dir {
@@ -414,14 +411,6 @@ impl Game {
             y: GRAV_ACC,
         };
 
-        if input.is_key_down(Key::ArrowRight) {
-            self.player.dir = Dir::E;
-            self.player.anim.play(AnimationKey::PlayerRightWalk, false);
-        } else if input.is_key_down(Key::ArrowLeft) {
-            self.player.dir = Dir::W;
-            self.player.anim.play(AnimationKey::PlayerLeftWalk, false);
-        }
-
         // Handle jumping NOT WORKING
         if input.is_key_down(Key::ArrowUp) && self.player.grounded {
             self.player.jumping = true;
@@ -490,6 +479,7 @@ impl Game {
         let prect = self.player.rect();
 
         let mut player_tile_contacts: Vec<_> = vec![];
+        Self::gather_contacts_tiles(&[prect], self.level(), &mut player_tile_contacts);
 
         self.player.grounded = false;
         for contact in player_tile_contacts {
@@ -515,36 +505,13 @@ impl Game {
         if triggers.is_empty() {
             self.player.touching_obstacle = false;
         }
-        for Contact { b_index: obstacle, .. } in triggers.drain(..) {
+        for Contact {
+            b_index: obstacle, ..
+        } in triggers.drain(..)
+        {
             // enter obstacle if player has moved, wasn't previously touching obstacle
             if !self.player.touching_obstacle {
-                self.player.touching_obstacle = true;
-                let (obstacle_to, obstacle_to_pos, _obstacle_pos) = &self.obstacles[obstacle];
-                let dest = self
-                    .levels
-                    .iter()
-                    .position(|l| l.name() == obstacle_to)
-                    .expect("obstacle to invalid room {obstacle_to}!");
-                if dest == self.current_level {
-                    self.player.pos = self
-                        .level()
-                        .grid_to_world((obstacle_to_pos.0 as usize, obstacle_to_pos.1 as usize))
-                        + Vec2 {
-                            x: TILE_SZ as f32 / 2.0,
-                            y: -12.0 + TILE_SZ as f32 / 2.0,
-                        };
-                } else {
-                    self.current_level = dest;
-                    self.enter_level(
-                        self.level()
-                            .grid_to_world((obstacle_to_pos.0 as usize, obstacle_to_pos.1 as usize))
-                            + Vec2 {
-                                x: 0.0 + TILE_SZ as f32 / 2.0,
-                                y: -12.0 + TILE_SZ as f32 / 2.0,
-                            },
-                    );
-                }
-                break;
+                self.tp_to_start(obstacle);
             }
         }
         while self.player.pos.x
@@ -568,7 +535,36 @@ impl Game {
         self.camera.screen_pos[1] =
             self.camera.screen_pos[1].clamp(0.0, (lh * TILE_SZ).max(H) as f32 - H as f32);
     }
-    
+
+    fn tp_to_start(&mut self, obstacle: usize) {
+        self.player.touching_obstacle = true;
+        let (obstacle_to, obstacle_to_pos, _obstacle_pos) = &self.obstacles[obstacle];
+        let dest = self
+            .levels
+            .iter()
+            .position(|l| l.name() == obstacle_to)
+            .expect("obstacle to invalid room {obstacle_to}!");
+        if dest == self.current_level {
+            self.player.pos = self
+                .level()
+                .grid_to_world((obstacle_to_pos.0 as usize, obstacle_to_pos.1 as usize))
+                + Vec2 {
+                    x: TILE_SZ as f32 / 2.0,
+                    y: -12.0 + TILE_SZ as f32 / 2.0,
+                };
+        } else {
+            self.current_level = dest;
+            self.enter_level(
+                self.level()
+                    .grid_to_world((obstacle_to_pos.0 as usize, obstacle_to_pos.1 as usize))
+                    + Vec2 {
+                        x: 0.0 + TILE_SZ as f32 / 2.0,
+                        y: -12.0 + TILE_SZ as f32 / 2.0,
+                    },
+            );
+        }
+    }
+
     fn gather_contacts_tiles(rects: &[Rect], level: &Level, contacts: &mut Vec<Contact>) {
         for (rect_i, rect) in rects.iter().enumerate() {
             for (tr, _td) in level.tiles_within(*rect).filter(|(_, td)| td.solid) {
