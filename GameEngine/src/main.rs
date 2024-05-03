@@ -47,7 +47,7 @@ struct Game {
     current_level: usize,
     levels: Vec<Level>,
     player: Player,
-    doors: Vec<(String, (u16, u16), Vec2)>,
+    obstacles: Vec<(String, (u16, u16), Vec2)>,
     camera: Camera2D,
     animations: Vec<Animation>,
 }
@@ -64,7 +64,7 @@ struct Player {
     pos: Vec2,
     vel: Vec2,
     dir: Dir,
-    touching_door: bool,
+    touching_obstacle: bool,
     anim: AnimationState,
     jumping: bool,
     jump_timer: f32,
@@ -284,7 +284,7 @@ impl Game {
             current_level,
             camera,
             levels,
-            doors: vec![],
+            obstacles: vec![],
             player: Player {
                 vel: Vec2 { x: 0.0, y: 0.0 },
                 pos: player_start,
@@ -293,7 +293,7 @@ impl Game {
                     animation: AnimationKey::PlayerRightIdle,
                     t: 0.0,
                 },
-                touching_door: false,
+                touching_obstacle: false,
                 jumping: false,
                 jump_timer: 0.0,
                 grounded: true,
@@ -374,14 +374,14 @@ impl Game {
         &self.levels[self.current_level]
     }
     fn enter_level(&mut self, player_pos: Vec2) {
-        self.doors.clear();
-        // we will probably enter at a door
-        self.player.touching_door = true;
+        self.obstacles.clear();
+        // we will probably enter at a obstacle
+        self.player.touching_obstacle = true;
         self.player.pos = player_pos;
         for (etype, pos) in self.levels[self.current_level].starts().iter() {
             match etype {
                 EntityType::Player => {}
-                EntityType::Door(rm, x, y) => self.doors.push((rm.clone(), (*x, *y), *pos)),
+                EntityType::Obstacle(rm, x, y) => self.obstacles.push((rm.clone(), (*x, *y), *pos)),
             }
         }
     }
@@ -485,11 +485,11 @@ impl Game {
 
         self.player.anim.tick(dt);
 
-        // Door collision and response
+        // Obstacle collision and response
         let mut triggers = vec![];
         let prect = self.player.rect();
 
-        let mut player_tile_contacts = vec![];
+        let mut player_tile_contacts: Vec<_> = vec![];
 
         self.player.grounded = false;
         for contact in player_tile_contacts {
@@ -501,8 +501,8 @@ impl Game {
             }
         }
 
-        let door_rects = self
-            .doors
+        let obstacle_rects = self
+            .obstacles
             .iter()
             .map(|(_, _, pos)| Rect {
                 x: pos.x - 8.0,
@@ -511,24 +511,24 @@ impl Game {
                 h: 16,
             })
             .collect::<Vec<_>>();
-        self::Game::gather_contacts(&[prect], &door_rects, &mut triggers);
+        self::Game::gather_contacts(&[prect], &obstacle_rects, &mut triggers);
         if triggers.is_empty() {
-            self.player.touching_door = false;
+            self.player.touching_obstacle = false;
         }
-        for Contact { b_index: door, .. } in triggers.drain(..) {
-            // enter door if player has moved, wasn't previously touching door
-            if !self.player.touching_door {
-                self.player.touching_door = true;
-                let (door_to, door_to_pos, _door_pos) = &self.doors[door];
+        for Contact { b_index: obstacle, .. } in triggers.drain(..) {
+            // enter obstacle if player has moved, wasn't previously touching obstacle
+            if !self.player.touching_obstacle {
+                self.player.touching_obstacle = true;
+                let (obstacle_to, obstacle_to_pos, _obstacle_pos) = &self.obstacles[obstacle];
                 let dest = self
                     .levels
                     .iter()
-                    .position(|l| l.name() == door_to)
-                    .expect("door to invalid room {door_to}!");
+                    .position(|l| l.name() == obstacle_to)
+                    .expect("obstacle to invalid room {obstacle_to}!");
                 if dest == self.current_level {
                     self.player.pos = self
                         .level()
-                        .grid_to_world((door_to_pos.0 as usize, door_to_pos.1 as usize))
+                        .grid_to_world((obstacle_to_pos.0 as usize, obstacle_to_pos.1 as usize))
                         + Vec2 {
                             x: TILE_SZ as f32 / 2.0,
                             y: -12.0 + TILE_SZ as f32 / 2.0,
@@ -537,7 +537,7 @@ impl Game {
                     self.current_level = dest;
                     self.enter_level(
                         self.level()
-                            .grid_to_world((door_to_pos.0 as usize, door_to_pos.1 as usize))
+                            .grid_to_world((obstacle_to_pos.0 as usize, obstacle_to_pos.1 as usize))
                             + Vec2 {
                                 x: 0.0 + TILE_SZ as f32 / 2.0,
                                 y: -12.0 + TILE_SZ as f32 / 2.0,
