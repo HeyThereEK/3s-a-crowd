@@ -12,3 +12,5 @@ This is a multiplayer runner. There are mud puddles on the floor, which slow you
 We used the LocaThePug code as a template for this second game. We added a new player and custom controls for both, and the mud puddles are sections in which, on contact, the player is slowed down. 
 
 ## Flappy Bird
+The title is self explanatory
+
