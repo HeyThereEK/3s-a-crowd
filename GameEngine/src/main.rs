@@ -484,11 +484,6 @@ impl Game {
         }
 
         self.player.anim.tick(dt);
-<<<<<<< HEAD
-    }
-        }
-=======
->>>>>>> fd40c5964f45eb939ccacb48680d7f3fb08c9e9c
 
         // Obstacle collision and response
         let mut triggers = vec![];
@@ -624,3 +619,4 @@ impl Game {
         }
         displacement
     }
+}
