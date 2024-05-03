@@ -16,3 +16,13 @@ This game is an easy-mode clone of flappy bird but with a snail. There is animat
 
 The jump timer was removed to allow for infinite jumps. When the player reaches the end they beat the game. There was more potential for procedural generation here. 
 
+## Game Engine
+
+Our game engine includes a lot of features. We added functions meant to allow users to provide a path to a music file that automically plays in the background, procedural generation that randomly creates obstacles from a vector of options,  collision, movement, gravity, and jumping. We also removed dead code (direction changes, all the enemy code, etc), and refactored functions for easier utilization of code. We included functionality from features in our previous games, like: 
+- Collision
+- Movement
+- Gravity
+- Jumping
+- Rendering
+- Entity management
+- Camera management
