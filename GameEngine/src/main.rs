@@ -491,7 +491,7 @@ impl Game {
         }
 
         self.player.anim.tick(dt);
-
+    }
         }
 
         // Door collision and response
@@ -627,4 +627,3 @@ impl Game {
         }
         displacement
     }
-}
