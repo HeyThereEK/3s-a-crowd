@@ -273,7 +273,6 @@ impl Game {
             current_level,
             camera,
             levels,
-            // enemies: vec![],
             doors: vec![],
             player1: Player {
                 vel: Vec2 { x: 0.0, y: 0.0 },
