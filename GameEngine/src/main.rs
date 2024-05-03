@@ -284,7 +284,6 @@ impl Game {
             current_level,
             camera,
             levels,
-            enemies: vec![],
             doors: vec![],
             player: Player {
                 vel: Vec2 { x: 0.0, y: 0.0 },
@@ -366,8 +365,6 @@ impl Game {
                     0.07,
                 )
                 .flip_horizontal(),
-                .looped()
-                .flip_horizontal(),
             ],
         };
         game.enter_level(player_start);
@@ -378,7 +375,6 @@ impl Game {
     }
     fn enter_level(&mut self, player_pos: Vec2) {
         self.doors.clear();
-        self.enemies.clear();
         // we will probably enter at a door
         self.player.touching_door = true;
         self.player.pos = player_pos;
@@ -391,7 +387,7 @@ impl Game {
     }
     fn sprite_count(&self) -> usize {
         //todo!("count how many entities and other sprites we have");
-        self.level().sprite_count() + self.enemies.len() + 1
+        self.level().sprite_count() + 1
     }
     fn render(&mut self, frend: &mut Renderer) {
         // make this exactly as big as we need
@@ -400,9 +396,6 @@ impl Game {
 
         let sprites_used = self.level().render_into(frend, 0);
         let (sprite_posns, sprite_gfx) = frend.sprites_mut(0, sprites_used..);
-
-        let sprite_posns = &mut sprite_posns[self.enemies.len()..];
-        let sprite_gfx = &mut sprite_gfx[self.enemies.len()..];
         sprite_posns[0] = self.player.trf();
         sprite_gfx[0] = self.player.anim.sample(&self.animations);
 
@@ -491,8 +484,11 @@ impl Game {
         }
 
         self.player.anim.tick(dt);
+<<<<<<< HEAD
     }
         }
+=======
+>>>>>>> fd40c5964f45eb939ccacb48680d7f3fb08c9e9c
 
         // Door collision and response
         let mut triggers = vec![];
@@ -577,6 +573,7 @@ impl Game {
         self.camera.screen_pos[1] =
             self.camera.screen_pos[1].clamp(0.0, (lh * TILE_SZ).max(H) as f32 - H as f32);
     }
+    
     fn gather_contacts_tiles(rects: &[Rect], level: &Level, contacts: &mut Vec<Contact>) {
         for (rect_i, rect) in rects.iter().enumerate() {
             for (tr, _td) in level.tiles_within(*rect).filter(|(_, td)| td.solid) {
