@@ -11,6 +11,8 @@ This is a multiplayer runner. There are mud puddles on the floor, which slow you
 
 We used the LocaThePug code as a template for this second game. We added a new player and custom controls for both, and the mud puddles are sections in which, on contact, the player is slowed down. 
 
-## Flappy Bird
-The title is self explanatory
+## Flaily Snail
+This game is an easy-mode clone of flappy bird but with a snail. There is animations associated with jumping and moving, and if the snail touches the bottom obstacles it is teleported back to the start. 
+
+The jump timer was removed to allow for infinite jumps. When the player reaches the end they beat the game. There was more potential for procedural generation here. 
 
