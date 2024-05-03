@@ -13,7 +13,7 @@ pub enum EntityType {
     Player,
     // Enemy,
     // which level, grid x in dest level, grid y in dest level
-    Door(String, u16, u16),
+    Obstacle(String, u16, u16),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -51,7 +51,7 @@ impl Level {
     enemy X Y
     enemy X Y
     enemy X Y
-    door LEVELNAME TO-X TO-Y X Y
+    Obstacle LEVELNAME TO-X TO-Y X Y
     you can add more types of thing if you want
     */
     pub fn from_str(s: &str) -> Self {
@@ -172,17 +172,21 @@ impl Level {
                         let etype = match etype {
                             "player" => EntityType::Player,
                             // "enemy" => EntityType::Enemy,
-                            "door" => {
+                            "obstacle" => {
                                 let to_room = chunks.next().expect("Couldn't get dest room {line}");
                                 let to_x = u16::from_str(
-                                    chunks.next().expect("No dest x coord in door line {line}"),
+                                    chunks
+                                        .next()
+                                        .expect("No dest x coord in obstacle line {line}"),
                                 )
                                 .expect("Couldn't parse x coord as u16 in {line}");
                                 let to_y = u16::from_str(
-                                    chunks.next().expect("No dest y coord in door line {line}"),
+                                    chunks
+                                        .next()
+                                        .expect("No dest y coord in obstacle line {line}"),
                                 )
                                 .expect("Couldn't parse y coord as u16 in {line}");
-                                EntityType::Door(to_room.to_string(), to_x, to_y)
+                                EntityType::Obstacle(to_room.to_string(), to_x, to_y)
                             }
                             _ => panic!("Unrecognized entity type in {line}"),
                         };
