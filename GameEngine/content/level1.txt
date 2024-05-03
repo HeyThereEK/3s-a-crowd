@@ -33,7 +33,6 @@ gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc
 gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc   gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc  gdc    
 ======
 player 5 8
-enemy 13 9
 door level1 2 8 21 9
 door level1 2 8 31 9
 door level1 2 8 36 9
