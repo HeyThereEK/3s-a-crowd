@@ -440,14 +440,6 @@ impl Game {
             y: GRAV_ACC,
         };
 
-        if input.is_key_down(Key::ArrowRight) {
-            self.player.dir = Dir::E;
-            self.player.anim.play(AnimationKey::PlayerRightWalk, false);
-        } else if input.is_key_down(Key::ArrowLeft) {
-            self.player.dir = Dir::W;
-            self.player.anim.play(AnimationKey::PlayerLeftWalk, false);
-        }
-
         // Handle jumping NOT WORKING
         if input.is_key_down(Key::ArrowUp) && self.player.grounded {
             self.player.jumping = true;
@@ -596,7 +588,36 @@ impl Game {
         self.camera.screen_pos[1] =
             self.camera.screen_pos[1].clamp(0.0, (lh * TILE_SZ).max(H) as f32 - H as f32);
     }
-    
+
+    fn tp_to_start(&mut self, obstacle: usize) {
+        self.player.touching_obstacle = true;
+        let (obstacle_to, obstacle_to_pos, _obstacle_pos) = &self.world.obstacles[obstacle];
+        let dest = self
+            .levels
+            .iter()
+            .position(|l| l.name() == obstacle_to)
+            .expect("obstacle to invalid room {obstacle_to}!");
+        if dest == self.current_level {
+            self.player.pos = self
+                .level()
+                .grid_to_world((obstacle_to_pos.0 as usize, obstacle_to_pos.1 as usize))
+                + Vec2 {
+                    x: TILE_SZ as f32 / 2.0,
+                    y: -12.0 + TILE_SZ as f32 / 2.0,
+                };
+        } else {
+            self.current_level = dest;
+            self.enter_level(
+                self.level()
+                    .grid_to_world((obstacle_to_pos.0 as usize, obstacle_to_pos.1 as usize))
+                    + Vec2 {
+                        x: 0.0 + TILE_SZ as f32 / 2.0,
+                        y: -12.0 + TILE_SZ as f32 / 2.0,
+                    },
+            );
+        }
+    }
+
     fn gather_contacts_tiles(rects: &[Rect], level: &Level, contacts: &mut Vec<Contact>) {
         for (rect_i, rect) in rects.iter().enumerate() {
             for (tr, _td) in level.tiles_within(*rect).filter(|(_, td)| td.solid) {
