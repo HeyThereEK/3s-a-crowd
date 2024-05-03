@@ -11,7 +11,7 @@ use std::str::FromStr;
 #[derive(Debug, PartialEq, Eq)]
 pub enum EntityType {
     Player,
-    // Enemy,
+    Enemy,
     // which level, grid x in dest level, grid y in dest level
     Door(String, u16, u16),
 }
@@ -171,7 +171,7 @@ impl Level {
                             .expect("Couldn't get entity start type {line}");
                         let etype = match etype {
                             "player" => EntityType::Player,
-                            // "enemy" => EntityType::Enemy,
+                            "enemy" => EntityType::Enemy,
                             "door" => {
                                 let to_room = chunks.next().expect("Couldn't get dest room {line}");
                                 let to_x = u16::from_str(

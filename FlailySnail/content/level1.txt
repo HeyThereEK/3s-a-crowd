@@ -1,0 +1,52 @@
+level1 128 13
+bg 144 80 2 2
+======
+air  o 144 80 2 2
+gdc  s 16 16 16 16
+gdfc s 16 0 16 16
+dctl o 32 208 16 16
+dctr o 48 208 16 16
+dccl o 32 224 16 16
+dccr o 48 224 16 16
+dcbl o 32 240 16 16
+dcbr o 48 240 16 16
+ws   o 67 175 16 16
+dotl o 0 208 16 16
+dotr o 16 208 16 16
+docl o 0 224 16 16
+docr o 16 224 16 16
+dobl o 0 240 16 16
+dobr o 16 240 16 16
+======
+air air air air air air air air air air air air air air air ws air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air air ws air air air air ws air air air air ws air air air air air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air ws air air air air air air air air air air air air air air air air air air air air air air air air air air air
+air air air air air air air air air air air air air air air ws air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air air ws air air air air ws air air air air ws air air air air air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air ws air air air air air air air air air air air air air air air air air air air air air air air air air air air
+air air air air air air air air air air air air air air air ws air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air air ws air air air air ws air air air air ws air air air air air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air ws air air air air air air air air air air air air air air air air air air air air air air air air air air air
+air air air air air air air air air air air air air air air ws air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air air ws air air air air ws air air air air ws air air air air air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air ws air air air air air air air air air air air air air air air air air air air air air air air air air air air
+air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
+air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  
+air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
+air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
+air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air air air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air  air
+air air air air air air air air air air air air air air air ws air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air air ws air air air air ws air air air air ws air air air air air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air ws air air air air air air air air air air air air air air air air air air air air air air air air air air air
+air air air air air air air air air air air air air air air ws air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air air ws air air air air ws air air air air ws air air air air air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air ws air air air air air air air air air air air air air air air air air air air air air air air air air air air
+air air air air air air air air air air air air air air air ws air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air air ws air air air air ws air air air air ws air air air air air air air air air ws air air air air air air air air air ws air air air air ws air air air air air air air air air ws air air air ws air air air air air air air air air air air air air air air air air air air air air air air air air air air
+======
+player 5 8
+enemy 13 9
+door level1 2 8 21 9
+door level1 2 8 31 9
+door level1 2 8 36 9
+door level1 2 8 46 9
+door level1 2 8 51 9
+door level1 2 8 56 9
+door level1 2 8 61 9
+door level1 2 8 71 9
+door level1 2 8 81 9
+door level1 2 8 86 9
+door level1 2 8 96 9
+door level1 6 8 110 9
+door level1 6 8 110 8
+door level1 6 8 110 7
+door level1 6 8 110 6
+door level1 6 8 110 5
