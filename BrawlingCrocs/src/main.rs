@@ -19,8 +19,6 @@ const MAX_SPEED: f32 = 90.0;
 const BRAKE_DAMP: f32 = 0.9;
 const JUMP_VEL: f32 = 140.0;
 const JUMP_TIME_MAX: f32 = 0.15;
-const ATTACK_MAX_TIME: f32 = 0.6;
-const ATTACK_COOLDOWN_TIME: f32 = 0.1;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Dir {
@@ -44,47 +42,9 @@ struct Game {
     levels: Vec<Level>,
     player1: Player,
     player2: Player,
-    enemies: Vec<Enemy>,
     doors: Vec<(String, (u16, u16), Vec2)>,
     camera: Camera2D,
     animations: Vec<Animation>,
-}
-
-struct Enemy {
-    pos: Vec2,
-    dir: Dir,
-    vel: Vec2,
-    dead: bool,
-    change_dir_timer: f32,
-    anim: AnimationState,
-}
-impl Enemy {
-    fn die(&mut self) {
-        self.dead = true;
-    }
-    fn rect(&self) -> Rect {
-        if self.dead {
-            return Rect::ZERO;
-        }
-        Rect {
-            x: self.pos.x - 18.0 + 6.0,
-            y: self.pos.y - 8.0,
-            w: 24,
-            h: 8,
-        }
-    }
-    fn trf(&self) -> Transform {
-        if self.dead {
-            return Transform::ZERO;
-        }
-        Transform {
-            w: 36,
-            h: 16,
-            x: self.pos.x,
-            y: self.pos.y,
-            rot: 0.0,
-        }
-    }
 }
 
 struct Contact {
@@ -104,7 +64,6 @@ struct Player {
     jumping: bool,
     jump_timer: f32,
     grounded: bool,
-    attack_timer: f32,
     controls: Vec<Key>,
 }
 impl Player {
@@ -129,26 +88,6 @@ impl Player {
             rot: 0.0,
         }
     }
-    fn attack_rect(&self) -> Rect {
-        Rect {
-            x: self.pos.x
-                + match self.dir {
-                    Dir::E => 16.0,
-                    Dir::W => 0.0,
-                },
-            y: self.pos.y - 12.0,
-            w: if self.attack_timer > ATTACK_COOLDOWN_TIME {
-                18
-            } else {
-                0
-            },
-            h: if self.attack_timer > ATTACK_COOLDOWN_TIME {
-                24
-            } else {
-                0
-            },
-        }
-    }
 }
 
 mod animation;
@@ -169,8 +108,6 @@ enum AnimationKey {
     PlayerLeftJumpRise,
     PlayerLeftJumpFall,
     PlayerLeftAttack,
-    EnemyRightWalk,
-    EnemyLeftWalk,
 }
 struct AnimationState {
     animation: AnimationKey,
@@ -336,7 +273,7 @@ impl Game {
             current_level,
             camera,
             levels,
-            enemies: vec![],
+            // enemies: vec![],
             doors: vec![],
             player1: Player {
                 vel: Vec2 { x: 0.0, y: 0.0 },
@@ -350,8 +287,7 @@ impl Game {
                 jumping: false,
                 jump_timer: 0.0,
                 grounded: true,
-                attack_timer: 0.2,
-                controls: vec![Key::KeyW, Key::KeyA, Key::KeyS, Key::KeyD, Key::KeyQ],
+                controls: vec![Key::KeyW, Key::KeyA, Key::KeyS, Key::KeyD],
             },
             player2: Player {
                 vel: Vec2 { x: 0.0, y: 0.0 },
@@ -365,8 +301,7 @@ impl Game {
                 jumping: false,
                 jump_timer: 0.0,
                 grounded: true,
-                attack_timer: 0.2,
-                controls: vec![Key::KeyI, Key::KeyJ, Key::KeyK, Key::KeyL, Key::KeyO],
+                controls: vec![Key::KeyI, Key::KeyJ, Key::KeyK, Key::KeyL],
             },
             animations: vec![
                 Animation::with_frame(SheetRegion::ZERO),
@@ -482,7 +417,6 @@ impl Game {
     }
     fn enter_level(&mut self, player1_pos: Vec2, player2_pos: Vec2) {
         self.doors.clear();
-        self.enemies.clear();
         // we will probably enter at a door
         self.player1.touching_door = true;
         self.player1.pos = player1_pos;
@@ -492,27 +426,12 @@ impl Game {
             match etype {
                 EntityType::Player => {}
                 EntityType::Door(rm, x, y) => self.doors.push((rm.clone(), (*x, *y), *pos)),
-                EntityType::Enemy => self.enemies.push(Enemy {
-                    dead: false,
-                    pos: *pos,
-                    vel: Vec2 { x: 0.0, y: 0.0 },
-                    dir: if rand::thread_rng().gen_bool(0.5) {
-                        Dir::E
-                    } else {
-                        Dir::W
-                    },
-                    anim: AnimationState {
-                        animation: AnimationKey::EnemyLeftWalk,
-                        t: 0.0,
-                    },
-                    change_dir_timer: rand::thread_rng().gen_range(3.0..5.0),
-                }),
             }
         }
     }
     fn sprite_count(&self) -> usize {
         //todo!("count how many entities and other sprites we have");
-        self.level().sprite_count() + self.enemies.len() + 2
+        self.level().sprite_count() + /*self.enemies.len() +*/ 2
     }
     fn render(&mut self, frend: &mut Renderer) {
         // make this exactly as big as we need
@@ -522,18 +441,6 @@ impl Game {
         let sprites_used = self.level().render_into(frend, 0);
         let (sprite_posns, sprite_gfx) = frend.sprites_mut(0, sprites_used..);
 
-        for (enemy, (trf, uv)) in self
-            .enemies
-            .iter()
-            .zip(sprite_posns.iter_mut().zip(sprite_gfx.iter_mut()))
-        {
-            *trf = enemy.trf();
-            *uv = self.animations[AnimationKey::EnemyLeftWalk as usize]
-                .sample(0.0)
-                .unwrap();
-        }
-        let sprite_posns = &mut sprite_posns[self.enemies.len()..];
-        let sprite_gfx = &mut sprite_gfx[self.enemies.len()..];
         sprite_posns[0] = self.player1.trf();
         sprite_gfx[0] = self.player1.anim.sample(&self.animations);
         sprite_posns[1] = self.player2.trf();
@@ -694,69 +601,15 @@ impl Game {
 
         self.player2.anim.tick(dt);
 
-        // Enemy calculations
-        for enemy in self.enemies.iter_mut() {
-            if enemy.dead {
-                continue;
-            }
-            enemy.change_dir_timer -= dt;
-            if enemy.change_dir_timer <= 0.0 {
-                enemy.dir = if enemy.dir == Dir::E { Dir::W } else { Dir::E };
-                enemy.change_dir_timer = rand::thread_rng().gen_range(3.0..5.0);
-            }
-
-            enemy.vel.x = MAX_SPEED
-                * match enemy.dir {
-                    Dir::E => 1.0,
-                    Dir::W => -1.0,
-                };
-            enemy.pos += enemy.vel * dt;
-            enemy.pos.x = enemy.pos.x.clamp(
-                0.0,
-                lw as f32 * TILE_SZ as f32 - enemy.rect().w as f32 / 2.0,
-            );
-            enemy.pos.y = enemy.pos.y.clamp(
-                0.0,
-                lh as f32 * TILE_SZ as f32 * H as f32 - enemy.rect().h as f32 / 2.0,
-            );
-            match enemy.dir {
-                Dir::E => {
-                    enemy.anim.play(AnimationKey::EnemyRightWalk, false);
-                }
-                Dir::W => {
-                    enemy.anim.play(AnimationKey::EnemyLeftWalk, false);
-                }
-            }
-            enemy.anim.tick(dt);
-        }
-
         // Door collision and response
         let mut triggers = vec![];
-        let mut contacts = vec![];
         let p1rect = self.player1.rect();
         let p2rect = self.player2.rect();
 
-        let enemy_rects = self
-            .enemies
-            .iter()
-            .map(|enemy| Rect {
-                x: enemy.pos.x,
-                y: enemy.pos.y,
-                w: 16,
-                h: 16,
-            })
-            .collect::<Vec<_>>();
-
         let mut player1_tile_contacts = vec![];
         let mut player2_tile_contacts = vec![];
-        let mut enemy_tile_contacts = vec![];
-
-        self::Game::gather_contacts_tiles(&enemy_rects, self.level(), &mut enemy_tile_contacts);
         self::Game::gather_contacts_tiles(&[p1rect], self.level(), &mut player1_tile_contacts);
         self::Game::gather_contacts_tiles(&[p2rect], self.level(), &mut player2_tile_contacts);
-
-        self::Game::gather_contacts(&[p1rect], &enemy_rects, &mut contacts);
-        self::Game::gather_contacts(&[p2rect], &enemy_rects, &mut contacts);
 
         self.player1.grounded = false;
         for contact in player1_tile_contacts {
@@ -776,39 +629,6 @@ impl Game {
                 self.player2.grounded = true;
                 self.player2.vel.y = 0.0;
             }
-        }
-
-        // Attacks
-        let mut attack_contacts = vec![];
-
-        if input.is_key_down(Key::Space) && self.player1.attack_timer > ATTACK_COOLDOWN_TIME {
-            self.player1.anim.play(
-                match self.player1.dir {
-                    Dir::E => AnimationKey::PlayerRightAttack,
-                    Dir::W => AnimationKey::PlayerLeftAttack,
-                },
-                false,
-            );
-            self.player1.attack_timer = 0.0;
-        }
-
-        if input.is_key_down(Key::Enter) && self.player2.attack_timer > ATTACK_COOLDOWN_TIME {
-            self.player2.anim.play(
-                match self.player2.dir {
-                    Dir::E => AnimationKey::PlayerRightAttack,
-                    Dir::W => AnimationKey::PlayerLeftAttack,
-                },
-                false,
-            );
-            self.player2.attack_timer = 0.0;
-        }
-
-        // self::Game::gather_contacts(&[attack_rect], &enemy_rects, &mut attack_contacts);
-        self.attack_enemy_collision_response(&mut attack_contacts);
-
-        for contact in enemy_tile_contacts {
-            let disp = Self::compute_disp(contact.a_rect, contact.b_rect);
-            self.enemies[contact.a_index].pos += disp;
         }
 
         let door_rects = self
@@ -917,7 +737,6 @@ impl Game {
         }
     }
 
-    // computes the displacement to resolve the contact
     fn compute_disp(a: Rect, b: Rect) -> Vec2 {
         let mut displacement = a.overlap(b).unwrap_or(Vec2 { x: 0.0, y: 0.0 });
         if displacement.x < displacement.y {
@@ -925,8 +744,6 @@ impl Game {
         } else {
             displacement.x = 0.0;
         }
-        // rectangle a is left of rectangle b, displacement becomes negative
-        // rectabnel a is bellow rectangle b, displacement becomes negative
         if a.x < b.x {
             displacement.x = -displacement.x;
         }
@@ -934,29 +751,5 @@ impl Game {
             displacement.y = -displacement.y;
         }
         displacement
-    }
-
-    // collision response for the player1 and enemies, give the player1 knockback and lose one heart
-    // fn player_enemy_collision_response(&mut self, contacts: &mut [Contact]) {
-    //     for contact in contacts {
-    //         if self.knockback_timer > 0.0 {
-    //             continue;
-    //         }
-    //         self.knockback_timer = KNOCKBACK_TIME;
-    //         self.health -= 1;
-    //     }
-    // }
-
-    // collision response for the player1's attack and enemies, remove the enemy
-    fn attack_enemy_collision_response(&mut self, contacts: &mut [Contact]) {
-        let mut to_remove = vec![];
-        for contact in contacts {
-            to_remove.push(contact.b_index);
-        }
-        to_remove.sort_unstable();
-        to_remove.dedup();
-        for i in to_remove.iter().rev() {
-            self.enemies.remove(*i);
-        }
     }
 }

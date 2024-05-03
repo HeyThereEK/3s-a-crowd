@@ -34,5 +34,4 @@ empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt
 empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt
 empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt empt
 ======
-enemy 10 5
 door level1 21 6 5 6
